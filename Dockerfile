@@ -1,9 +1,7 @@
 FROM alpine:3.14
 
-# you can specify python version during image build
 ARG PYTHON_VERSION=3.6.1
 
-# install build dependencies and needed tools
 RUN apk add \
     wget \
 	curl \
