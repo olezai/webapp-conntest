@@ -1,6 +1,27 @@
-FROM python:alpine
+FROM alpine:3.14
 
-# RUN apk add --no-cache curl python pkgconfig python-dev openssl-dev libffi-dev musl-dev
+# you can specify python version during image build
+ARG PYTHON_VERSION=3.6.1
+
+# install build dependencies and needed tools
+RUN apk add \
+    wget \
+	curl \
+    gcc \
+    make \
+    zlib-dev \
+    libffi-dev \
+    openssl-dev \
+    musl-dev
+
+RUN cd /opt \
+    && wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz \                                              
+    && tar xzf Python-${PYTHON_VERSION}.tgz
+
+RUN cd /opt/Python-${PYTHON_VERSION} \ 
+    && ./configure --prefix=/usr --enable-optimizations --with-ensurepip=install \
+    && make install \
+    && rm /opt/Python-${PYTHON_VERSION}.tgz /opt/Python-${PYTHON_VERSION} -rf
 
 ADD ./requirements.txt /opt/webapp-conntest/
 
